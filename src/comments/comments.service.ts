@@ -4,13 +4,7 @@ import CommentsRepository from './comments.repository';
 
 @Injectable()
 export class CommentsService {
-  getAllComments(
-    p: GetAllCommentByUserDto,
-  ):
-    | import('./comments.dto').GetAllCommentByUserDto
-    | PromiseLike<import('./comments.dto').GetAllCommentByUserDto> {
-    throw new Error('Method not implemented.');
-  }
+
   constructor(private readonly commentRepoistorty: CommentsRepository) {}
   async createComments(body: any): Promise<void> {
     const post = await this.commentRepoistorty.createComments(body);

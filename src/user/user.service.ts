@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GetUserDto } from './user.dto';
 import UserRepository from './user.repository';
 
 
@@ -14,8 +15,12 @@ export class UserService {
     return users;
   }
 
-  async getUsers(id:number) {
-    const users = await this.userRepoistorty.getuser();
+  
+
+  async getUserRecord(p: GetUserDto): Promise<GetUserDto> {
+    const { id: userId } = p;
+    const users = await this.userRepoistorty.getusersRecord(parseInt(userId));
+
     return users;
   }
 }

@@ -20,3 +20,16 @@ export class CreateCommentDto {
   @IsUUID()
   body: string;
 }
+
+
+export class GetCommentDto{
+  id:string
+}
+
+export class GetAllCommentByUserDto {
+  userId: string;
+}
+
+export class GetAllCommentByPostDto {
+  userId: string;
+}

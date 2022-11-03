@@ -2,6 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BatchRequestDocument, GraphQLClient } from 'graphql-request';
 
+
+// ........ # This Service Files Is Integration between Nestjs and Hasura Graphql ......//
+
+// -------- # The Connection Between NestJs And Hasura Graphql By HASURA_URL And HASURA_ADMIN_SECRET 
+//            which is present in .env file
+
+
+
 @Injectable()
 export class HasuraService {
   private client: GraphQLClient;

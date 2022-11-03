@@ -6,6 +6,8 @@ import { HasuraService } from '../service/hasura.service';
 import { User } from './user.dto';
 
 
+// ##### Graphql query and Mutation ##### //
+
 const userFragment = gql`
   fragment users on user {
     id
@@ -21,7 +23,7 @@ const userFragment = gql`
 @Injectable()
 export default class UserRepository {
   getUser(id: number) {
-      throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
   findById(id: number) {
     throw new Error('Method not implemented.');
@@ -131,6 +133,32 @@ export default class UserRepository {
         document: userQuery,
 
         variables: {},
+      },
+    ]);
+
+    return users;
+  }
+
+  async getusersRecord(userId: number): Promise<any> {
+    const query = gql`
+      query ($userId: Int!) {
+        user_by_pk(id: $userId) {
+          ...users
+        }
+      }
+      ${userFragment}
+    `;
+
+    type result = [
+      {
+        data: { user: User[] };
+      },
+    ];
+
+    const users = await this.client.batchRequests<result>([
+      {
+        document: query,
+        variables: { userId },
       },
     ]);
 

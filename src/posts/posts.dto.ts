@@ -15,3 +15,10 @@ export class CreatePostDto {
   @IsUUID()
   body: string;
 }
+
+export class GetPostDto{
+  id: string;
+}
+export class GetAllPostDto {
+  userId: string;
+}

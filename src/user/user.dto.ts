@@ -15,3 +15,7 @@ export class CreateUserDto {
   @IsUUID()
   password: string;
 }
+
+export class GetUserDto {
+  id: string;
+}

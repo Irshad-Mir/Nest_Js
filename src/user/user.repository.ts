@@ -64,6 +64,23 @@ export default class UserRepository {
           name
           username
           password
+             Likes {
+        id
+        likes
+      }
+    }
+    comments {
+      id
+      name
+      email
+      body
+    }
+    products {
+      id
+      name
+      price
+      category
+    }
         }
       }
 
@@ -137,7 +154,32 @@ export default class UserRepository {
     const query = gql`
       query ($userId: Int!) {
         user_by_pk(id: $userId) {
-          ...users
+          id
+          name
+          password
+          posts {
+            id
+            title
+            userId
+            Likes {
+              id
+              likes
+            }
+          }
+          comments {
+            id
+            userId
+            name
+            email
+            body
+          }
+          products {
+            id
+            userId
+            name
+            price
+            category
+          }
         }
       }
       ${userFragment}

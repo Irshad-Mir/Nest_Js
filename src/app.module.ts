@@ -9,6 +9,8 @@ import { PostsModule } from './posts/posts.module';
 
 import { CommentsModule } from './comments/comments.module';
 import { LikesModule } from './likes/likes.module';
+import { ProductsModule } from './products/products.module';
+import { CartsModule } from './carts/carts.module';
 
 
 // ****** In This Project Total 15 Api's ******* //
@@ -29,6 +31,8 @@ import { LikesModule } from './likes/likes.module';
     CommentsModule,
     ConfigModule.forRoot({ isGlobal: true }),
     LikesModule,
+    ProductsModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

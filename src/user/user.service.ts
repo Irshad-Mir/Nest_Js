@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GetUserDto } from './user.dto';
+import { DeleteUserDto, GetUserDto } from './user.dto';
 import UserRepository from './user.repository';
 
 
@@ -15,12 +15,22 @@ export class UserService {
     return users;
   }
 
-  
-
   async getUserRecord(p: GetUserDto): Promise<GetUserDto> {
     const { id: userId } = p;
     const users = await this.userRepoistorty.getusersRecord(parseInt(userId));
 
     return users;
   }
+
+  async deleteUserById(p: DeleteUserDto): Promise<DeleteUserDto> {
+    const { id: userId } = p;
+    const users = await this.userRepoistorty.deleteuser(parseInt(userId));
+    return users;
+  }
+
+  async userUpdate(body: any, id: any): Promise<void> {
+    const user = await this.userRepoistorty.usersUpdate(body, id);
+    return user;
+  }
+ 
 }

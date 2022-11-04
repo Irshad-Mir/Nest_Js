@@ -22,12 +22,6 @@ const userFragment = gql`
 
 @Injectable()
 export default class UserRepository {
-  getUser(id: number) {
-    throw new Error('Method not implemented.');
-  }
-  findById(id: number) {
-    throw new Error('Method not implemented.');
-  }
   constructor(private readonly client: HasuraService) {}
 
   getUserQuery(): string {
@@ -163,5 +157,60 @@ export default class UserRepository {
     ]);
 
     return users;
+  }
+
+  async deleteuser(id: any): Promise<any> {
+    const query = gql`
+      mutation ($id: Int!) {
+        delete_user_by_pk(id: $id) {
+          name
+          username
+          password
+        }
+      }
+      ${userFragment}
+    `;
+
+    type result = [
+      {
+        data: { users: User[] };
+      },
+    ];
+
+    const users = await this.client.batchRequests<result>([
+      {
+        document: query,
+        variables: { id },
+      },
+    ]);
+
+    return users;
+  }
+
+  async usersUpdate(body: any, id: any): Promise<any> {
+    const userquery = gql`
+      mutation ($id: Int!, $body: user_set_input!) {
+        update_user_by_pk(pk_columns: { id: $id }, _set: $body) {
+          id
+          name
+          username
+          password
+        }
+      }
+    `;
+
+    type result = [
+      {
+        data: { users: User[] };
+      },
+    ];
+    const newusers = await this.client.batchRequests<result>([
+      {
+        document: userquery,
+        variables: { body, id },
+      },
+    ]);
+
+    return newusers;
   }
 }

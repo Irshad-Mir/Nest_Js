@@ -62,25 +62,16 @@ export default class UserRepository {
         user(id: $id) {
           id
           name
-          username
           password
-             Likes {
-        id
-        likes
-      }
-    }
-    comments {
-      id
-      name
-      email
-      body
-    }
-    products {
-      id
-      name
-      price
-      category
-    }
+          username
+          posts {
+            id
+            title
+            body
+            userId
+           
+            }
+          }
         }
       }
 
@@ -179,6 +170,14 @@ export default class UserRepository {
             name
             price
             category
+            carts {
+              userId
+              id
+              price
+              productId
+              quantity
+              total_price
+            }
           }
         }
       }

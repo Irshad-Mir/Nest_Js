@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { CreateUserDto, DeleteUserDto, GetUserDto, UpdateusersDto } from './user.dto';
+import { CreateUserDto, DeleteUserDto, GetUserDto, LoginDto, UpdateusersDto } from './user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -14,6 +14,7 @@ export class UserController {
 
     // Api 2 **************get  All Users   ***************//
   }
+ 
   @Get('/fetch')
   async getUser() {
     return this.userservice.getUser();

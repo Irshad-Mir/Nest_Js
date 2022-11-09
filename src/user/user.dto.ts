@@ -1,4 +1,4 @@
-import { IsUUID } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString, IsUUID, MinLength } from "class-validator";
 export class User{
     id?: number;
     name: string;
@@ -8,12 +8,13 @@ export class User{
 
 
 export class CreateUserDto {
-  @IsUUID()
   name: string;
-  @IsUUID()
+
   username: string;
-  @IsUUID()
+ 
+ 
   password: string;
+  refresh_token: string;
 }
 
 export class GetUserDto {
@@ -31,4 +32,16 @@ export class DeleteUserDto{
    name: string;
    email: string;
    body: string;
- }
+}
+ 
+export class LoginDto {
+  @IsString()
+  
+  username: string;
+
+  @IsString()
+  @MinLength(8)
+  @IsNotEmpty()
+  password: string;
+  
+}

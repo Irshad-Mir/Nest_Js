@@ -8,6 +8,12 @@ import { User } from './user.dto';
 
 // ##### Graphql query and Mutation ##### //
 
+export interface OnboardingsByPk {
+  userId: string;
+  id: string;
+  name: string;
+}
+
 const userFragment = gql`
   fragment users on user {
     id
@@ -254,4 +260,63 @@ export default class UserRepository {
 
     return newusers;
   }
+
+  async getUser(username: string) {
+    const query = gql`
+      query getUser($username: String, ) {
+        user(
+          where: {
+            _and: [{ username: { _eq: $username } }]
+          }
+        ) {
+          ...user
+          id
+        }
+      }
+      ${userFragment}
+    `;
+    const users = await this.getUsers(query, { username });
+    return users;
+  }
+  private async getUsers(query: string, variables = {}) {
+    const { users } = await this.client.request<{ users: User[] }>(
+      query,
+      variables,
+    );
+    return users;
+  }
+
+  async updateUserById(id: string, refresh_token: string) {
+    const updates = {
+      refresh_token: refresh_token,
+    };
+    const mutation = gql`
+      mutation updateUsersById($id: Int!, $updates: user_set_input) {
+        update_user_by_pk(pk_columns: { id: $id }, _set: $updates) {
+          id
+          refresh_token
+        }
+      }
+      ${userFragment}
+    `;
+    return this.client.request<{ update_user_by_pk: User[] }>(mutation, {
+      id,
+      updates,
+    });
+  }
+  async getOnboardingByUserId(userId: string) {
+    const query = gql`
+      query ($userId: Int!) {
+        onboardings_by_pk(userId: $userId) {
+          screen
+          is_completed
+        }
+      }
+    `;
+    const { onboardings_by_pk } = await this.client.request<{
+      onboardings_by_pk: OnboardingsByPk;
+    }>(query, { userId });
+    return onboardings_by_pk;
+  }
+  
 }

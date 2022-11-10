@@ -12,6 +12,9 @@ import { LikesModule } from './likes/likes.module';
 import { ProductsModule } from './products/products.module';
 import { CartsModule } from './carts/carts.module';
 import { OrdersModule } from './orders/orders.module';
+import { AuthModule } from './security/auth/auth.module';
+import { RolesGuard } from './security/guards/role.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 
 // ****** Social businuss app ******* //
@@ -40,8 +43,15 @@ import { OrdersModule } from './orders/orders.module';
     ProductsModule,
     CartsModule,
     OrdersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

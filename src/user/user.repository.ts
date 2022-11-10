@@ -28,7 +28,7 @@ const userFragment = gql`
 
 @Injectable()
 export default class UserRepository {
-  constructor(private readonly client: HasuraService) {}
+  constructor(private readonly client: HasuraService) { }
 
   getUserQuery(): string {
     const query = gql`
@@ -53,6 +53,8 @@ export default class UserRepository {
           password
 
           username
+          email
+          role
         }
       }
 
@@ -154,21 +156,26 @@ export default class UserRepository {
           id
           name
           password
+          username
           posts {
             id
-            title
             userId
+            title
+            body
+            comments {
+              id
+              userId
+              postId
+              name
+              email
+              body
+            }
             Likes {
               id
+              postId
+              userId
               likes
             }
-          }
-          comments {
-            id
-            userId
-            name
-            email
-            body
           }
           products {
             id
@@ -177,16 +184,27 @@ export default class UserRepository {
             price
             category
             carts {
-              userId
               id
-              price
+              userId
               productId
               quantity
               total_price
+              price
             }
+          }
+          Orders {
+            id
+            userId
+            cartId
+            quantity
+            price
+            total_price
+            status
+            created_at
           }
         }
       }
+
       ${userFragment}
     `;
 
@@ -261,44 +279,51 @@ export default class UserRepository {
     return newusers;
   }
 
-  async getUser(username: string) {
+  async getUserr(email: string, role: string) {
     const query = gql`
-      query getUser($username: String, ) {
-        user(
-          where: {
-            _and: [{ username: { _eq: $username } }]
+        query ($email: String, $role: String) {
+          user(
+            where: {
+              _and: [{ email: { _eq: $email } }, { role: { _eq: $role } }]
+            }
+          ) {
+            name
+            email
+            password
+            role
+            username
+            id
           }
-        ) {
-          ...user
-          id
         }
-      }
-      ${userFragment}
-    `;
-    const users = await this.getUsers(query, { username });
+        ${userFragment}
+      `;
+    console.log('query', query)
+    const users = await this.getUserss(query, { email, role });
+    console.log('users', users);
+
     return users;
   }
-  private async getUsers(query: string, variables = {}) {
-    const { users } = await this.client.request<{ users: User[] }>(
+  private async getUserss(query: string, variables = {}) {
+    const { user } = await this.client.request<{ user: User[] }>(
       query,
       variables,
     );
-    return users;
+    return user;
   }
 
   async updateUserById(id: string, refresh_token: string) {
     const updates = {
-      refresh_token: refresh_token,
-    };
+      refresh_token: refresh_token
+    }
     const mutation = gql`
-      mutation updateUsersById($id: Int!, $updates: user_set_input) {
-        update_user_by_pk(pk_columns: { id: $id }, _set: $updates) {
-          id
-          refresh_token
+        mutation updateUserById($id: Int!, $updates: user_set_input) {
+          update_user_by_pk(pk_columns: { id: $id }, _set: $updates) {
+            id
+            refresh_token
+          }
         }
-      }
-      ${userFragment}
-    `;
+        ${userFragment}
+      `;
     return this.client.request<{ update_user_by_pk: User[] }>(mutation, {
       id,
       updates,
@@ -306,17 +331,16 @@ export default class UserRepository {
   }
   async getOnboardingByUserId(userId: string) {
     const query = gql`
-      query ($userId: Int!) {
-        onboardings_by_pk(userId: $userId) {
-          screen
-          is_completed
+        query ($userId: Int!) {
+          onboardings_by_pk(userId: $userId) {
+            screen
+            is_completed
+          }
         }
-      }
-    `;
+      `;
     const { onboardings_by_pk } = await this.client.request<{
       onboardings_by_pk: OnboardingsByPk;
     }>(query, { userId });
     return onboardings_by_pk;
   }
-  
 }

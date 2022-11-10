@@ -6,7 +6,9 @@ import { HasuraService } from 'src/service/hasura.service';
 import { ConfigService } from '@nestjs/config';
 import UserRepository from './user.repository';
 import { JwtService } from '@nestjs/jwt';
-import { AuthService } from 'src/security/password.hash';
+import { AuthService } from 'src/security/auth/auth.service';
+
+
 
 
 
@@ -21,6 +23,6 @@ import { AuthService } from 'src/security/password.hash';
   ],
 
   controllers: [UserController],
-  exports: [UserRepository, UserService, AuthService],
+  exports: [UserRepository, UserService, AuthService, ],
 })
 export class UserModule {}

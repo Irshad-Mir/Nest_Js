@@ -14,7 +14,7 @@ export class UserController {
 
     // Api 2 **************get  All Users   ***************//
   }
- 
+
   @Get('/fetch')
   async getUser() {
     return this.userservice.getUser();
@@ -35,5 +35,10 @@ export class UserController {
   @Put('/update/:id')
   async updateComment(@Param('id') id: string, @Body() body: UpdateusersDto) {
     return this.userservice.userUpdate(body, parseInt(id));
+  }
+
+  @Post('/login')
+  async login(@Body() body: LoginDto) {
+    return this.userservice.login(body);
   }
 }

@@ -7,6 +7,7 @@ export class User {
   password: string;
   role: string;
   refresh_token: string;
+    static userId: any;
 }
 
 

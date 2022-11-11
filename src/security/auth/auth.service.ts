@@ -11,6 +11,7 @@ import {
 } from 'jsonwebtoken';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { ResponseTokensDto } from '../auth/dto/reponse-tokens.dto';
+
 export interface IGetTokens {
   id: string;
   role: string;
@@ -67,7 +68,8 @@ export class AuthService {
   public async validateAccessToken(
     bearerHeader: string,
   ): Promise<Jwt | JwtPayload> {
-    const token: string = bearerHeader.split(' ')[1];
+      const token: string = bearerHeader.split(' ')[1];
+    //  console.log('error Show:', token)
     const verifyOptions: VerifyOptions = {
       //algorithms: ['RS256'],
       jwtid: process.env.JWT_ACCESS_TOKEN_ID as string,
@@ -147,8 +149,11 @@ export class AuthService {
         token,
         process.env.PUBLIC_KEY as string,
         verifyOptions,
-      );
-      if (typeof decodedPayload === 'object') return decodedPayload;
+        );
+       
+        
+      if (typeof decodedPayload === 'object')
+        return decodedPayload;
       else return undefined;
     } catch (e) {
       return undefined;

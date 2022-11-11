@@ -6,12 +6,21 @@ import { ConfigService } from '@nestjs/config';
 import { PostsService } from './posts.service';
 import PostsRepository from './posts.repository';
 import { PostsController } from './posts.controller';
+import { JwtService } from '@nestjs/jwt';
+import { AuthService } from 'src/security/auth/auth.service';
 
 
 @Module({
-  providers: [PostsService, PostsRepository, HasuraService, ConfigService],
+  providers: [
+    PostsService,
+    PostsRepository,
+    HasuraService,
+    ConfigService,
+    AuthService,
+    JwtService,
+  ],
 
   controllers: [PostsController],
-  exports: [PostsRepository, PostsService],
+  exports: [PostsRepository, PostsService, AuthService,]
 })
 export class PostsModule {}

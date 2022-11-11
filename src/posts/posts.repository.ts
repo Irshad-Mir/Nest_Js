@@ -29,7 +29,8 @@ export default class PostsRepository {
 
   getPostQuery(): string {
     const query = gql`
-      query {
+       query($userId: Int!){
+            user(where: {id: {_eq: $userId}}) {
         posts {
           ...post
         }
@@ -43,8 +44,9 @@ export default class PostsRepository {
 
   addPostQuery(): string {
     const query = gql`
-      mutation ($body: posts_insert_input!) {
-        insert_posts_one(object: $body) {
+      mutation ($input: posts_insert_input!) {
+        insert_posts_one(object: $input) {
+          id
           userId
           title
 
@@ -57,7 +59,7 @@ export default class PostsRepository {
 
     return query;
   }
-  async createPosts(body: any): Promise<any> {
+  async createPosts(userId:string, body: any): Promise<any> {
     const postsquery = this.addPostQuery();
 
     type result = [
@@ -65,19 +67,20 @@ export default class PostsRepository {
         data: { post: Post[] };
       },
     ];
+    const input={userId, ...body}
 
     const newposts = await this.client.batchRequests<result>([
       {
         document: postsquery,
 
-        variables: { body },
+        variables: { input },
       },
     ]);
 
     return newposts;
   }
 
-  async getposts(): Promise<any> {
+  async getposts(userId:number): Promise<any> {
     const postQuery = this.getPostQuery();
 
     type result = [
@@ -90,17 +93,18 @@ export default class PostsRepository {
       {
         document: postQuery,
 
-        variables: {},
+        variables: {userId},
       },
     ]);
 
     return posts;
   }
 
-  async getpostsrecords(postId: number): Promise<any> {
+  async getpostsrecords(userId:string, postId: number): Promise<any> {
     const query = gql`
-      query ($postId: Int!) {
-        posts_by_pk(id: $postId) {
+      query getPostsById($userId:Int!,$postId: Int!) {
+      user(where:{id:{_eq:$userId}}){
+           posts(where:{id:{_eq: $postId}}) {
           ...post
         }
       }
@@ -116,7 +120,7 @@ export default class PostsRepository {
     const posts = await this.client.batchRequests<result>([
       {
         document: query,
-        variables: { postId },
+        variables: {userId, postId },
       },
     ]);
 

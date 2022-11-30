@@ -5,8 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 import { AppResolver } from './app.resolver';
+
+
 import { BookModule } from './book/book.module';
-import { PostModule } from './posts/post.module';
+import { ProjectModule } from './project/project.module';
+
+import { UserModule } from './users/user.module';
 
 
 
@@ -31,7 +35,7 @@ TypeOrmModule.forRoot({
   synchronize:true,
 
 }),
-BookModule, PostModule
+BookModule, UserModule, ProjectModule
 ],
   controllers: [],
   providers: [AppResolver],

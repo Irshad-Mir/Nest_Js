@@ -8,16 +8,59 @@ type Book {
   price: Int!
 }
 
+type Category {
+  id: Float!
+  name: String!
+  employee: Employee!
+  employeeId: Float
+}
+
+type Employee {
+  id: Float!
+  firstname: String!
+  lastname: String!
+  designation: String!
+  city: String
+  project: Project
+  projectId: Float
+  categories: [Category!]
+}
+
+type Project {
+  id: Float!
+  name: String!
+  code: Int!
+  categories: Employee
+}
+
+type User {
+  id: Int!
+  name: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
 type Query {
   index: String!
   getAllBooks: [Book!]!
   bookById(bookId: Int!): Book!
+  getAllUsers: [User!]!
+  UserById(userId: Int!): User!
+  findAllProject: [Project!]!
+  updateProject(id: Int!): Project!
 }
 
 type Mutation {
   deleteBook(bookId: Int!): String!
   addBook(addBookArgs: AddBookArgs!): String!
   updateBook(updateBookArgs: UpdateBookArgs!): String!
+  deleteUser(userId: Int!): String!
+  addUser(addUserArgs: AddUserArgs!): String!
+  updateUser(updateUserArgs: UpdateUserArgs!): String!
+  deleteProject(id: Int!): Project!
+  createProject(createProjectDto: CreateProjectDto!): Project!
+  findOneProject(updateProjectDto: UpdateProjectDto!): Project!
 }
 
 input AddBookArgs {
@@ -29,4 +72,30 @@ input UpdateBookArgs {
   id: Int!
   title: String!
   price: Int!
+}
+
+input AddUserArgs {
+  name: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
+input UpdateUserArgs {
+  id: Int!
+  name: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
+input CreateProjectDto {
+  name: String!
+  code: Int!
+}
+
+input UpdateProjectDto {
+  name: String!
+  code: Int!
+  id: Float!
 }
